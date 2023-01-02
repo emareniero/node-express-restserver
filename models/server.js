@@ -8,7 +8,7 @@ dotenv.config({ path: "./.env" });
 class Server {
   constructor() {
     this.app = express(); // Creamos en el servidor la app de express como una propiedad del servidor
-    this.port = process.env.PORT;
+    this.port = process.env.PORT || 3000;
     this.usuariosPath = '/api/usuarios'; 
 
     // Middlewares son funciones que agregan funciones que se ejecutan cuando se levanta el servidor
