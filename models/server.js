@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
-import { router } from "../routes/usuarios.js";
+import { routerUsu } from "../routes/usuarios.js";
 import { dbConnection } from "../database/config.js";
+import { routerAuth } from "../routes/auth.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -11,6 +12,7 @@ class Server {
     this.app = express(); // Creamos en el servidor la app de express como una propiedad del servidor
     this.port = process.env.PORT || 3000;
     this.usuariosPath = '/api/usuarios';
+    this.authPath = '/api/auth';
     
     // Conenctar la base de datos cuando se crea el servidor
     this.conectarDB();
@@ -40,7 +42,8 @@ class Server {
 
   routes() {
     // Mis rutas
-    this.app.use(this.usuariosPath, router)
+    this.app.use(this.authPath, routerAuth)
+    this.app.use(this.usuariosPath, routerUsu);
   }
 
   listen() {

@@ -62,9 +62,6 @@ const usuariosPost = async (req, res = response) => {
 const usuariosDelete = async (req, res) => {
   const { id } = req.params;
 
-  // Borrar un usuario fisicamente, NO RECOMENDADO, se pierde la integridad referencial
-  // const usuario = await Usuario.findByIdAndDelete(id);
-
   // Con el  codigo siguiente eliminamos un usuario para la persona que este usando el backend
   // pero no comprometemos la integridad referencial de nuestra base de datos.
   const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });

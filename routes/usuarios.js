@@ -2,21 +2,20 @@ import { Router } from "express";
 import { check } from "express-validator";
 import { usuariosDelete, usuariosGet, usuariosPost, usuariosPut } from "../controles/usuarios.js";
 import { esMailValido, esRoleValido, existeUsuarioPorID } from "../helpers/db-validators.js";
-import { validarCampos } from "../middlewares/validar-campos.js";
 
-export const router = Router();
+import { validarCampos, validarJWT, esAdminRole, tieneRol } from "../middlewares/index.js";
 
-router.get("/", usuariosGet); // Los middleware en las rutas se deben pasar como segundo argumento
+export const routerUsu = Router();
 
-router.put("/:id", [
-  check('id', "No es un ID valido").isMongoId(),
-  check('id').custom(existeUsuarioPorID),
-  check("rol").custom(esRoleValido),
-  validarCampos
-], 
-usuariosPut);
+routerUsu.get("/", usuariosGet); // Los middleware en las rutas se deben pasar como segundo argumento
 
-router.post(
+routerUsu.put(
+  "/:id",
+  [check("id", "No es un ID valido").isMongoId(), check("id").custom(existeUsuarioPorID), check("rol").custom(esRoleValido), validarCampos],
+  usuariosPut
+);
+
+routerUsu.post(
   "/",
   [
     check("nombre", "El nombre es obligatorio").not().isEmpty(),
@@ -30,14 +29,20 @@ router.post(
   usuariosPost
 );
 
-router.delete("/:id", [
-  check('id', "No es un ID valido").isMongoId(),
-  check('id').custom(existeUsuarioPorID),
-  validarCampos
-],
- usuariosDelete);
+routerUsu.delete(
+  "/:id",
+  [
+    validarJWT,
+    esAdminRole,
+    tieneRol("ADMIN_ROLE", "USER_ROLE", "VENTAS_ROLE"),
+    check("id", "No es un ID valido").isMongoId(),
+    check("id").custom(existeUsuarioPorID),
+    validarCampos,
+  ],
+  usuariosDelete
+);
 
-router.patch("/", (req, res) => {
+routerUsu.patch("/", (req, res) => {
   res.json({
     msg: "patch API",
   });

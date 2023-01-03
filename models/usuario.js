@@ -37,8 +37,13 @@ const UsuarioSchema = Schema({
 
 UsuarioSchema.methods.toJSON = function() {
     // Usamos funcion en lugar de Arrow funcion porque necesitamos que la instancia creada quede dentro de la funcnion..
-    const {__v, password, ...usuario} = this.toObject();
-    return usuario; // Aca estamos retornando el el usuario sin la version y el paswword
+    const {__v, password, _id, ...usuario} = this.toObject();
+
+    usuario.uid = _id;
+
+    return {
+        usuario
+    }; // Aca estamos retornando el el usuario sin la version y el paswword
 
 }
 
