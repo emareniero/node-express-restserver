@@ -7,14 +7,17 @@ import { validarCampos, validarJWT, esAdminRole, tieneRol } from "../middlewares
 
 export const routerUsu = Router();
 
+// Leer usuario de la db
 routerUsu.get("/", usuariosGet); // Los middleware en las rutas se deben pasar como segundo argumento
 
+// Actualizar un usuario de la db
 routerUsu.put(
   "/:id",
   [check("id", "No es un ID valido").isMongoId(), check("id").custom(existeUsuarioPorID), check("rol").custom(esRoleValido), validarCampos],
   usuariosPut
 );
 
+// Crear un nuevo usuario en la db
 routerUsu.post(
   "/",
   [
@@ -29,6 +32,7 @@ routerUsu.post(
   usuariosPost
 );
 
+// Borrar un usuario de la db
 routerUsu.delete(
   "/:id",
   [
@@ -42,6 +46,7 @@ routerUsu.delete(
   usuariosDelete
 );
 
+// No usamos esto aun!
 routerUsu.patch("/", (req, res) => {
   res.json({
     msg: "patch API",
