@@ -1,6 +1,7 @@
 import Role from "../models/role.js";
 //import Usuario from "../models/usuario.js";
 import { Categoria , Producto, Usuario} from "../models/index.js";
+import { json } from "express";
 
 const esRoleValido = async (rol = "") => {
   // Se le asigna el valor "" para que en caso que no venga rol choque con la siguiente validacion
@@ -47,4 +48,22 @@ const existeProductoPorId = async (id = "") => {
 };
 
 
-export { esRoleValido, esMailValido, existeUsuarioPorID, existeCategoriaPorId, existeProductoPorId };
+/**
+ * Vamos a crear aca la funcion para chequear si la coleccion que recibimos al actualizar un archivo esta permitida
+ */
+const coleccionesPermitidas = ( c = '', cPermitidas = [] ) => {
+
+  // Chequeamos que la coleccion que estamos recibiendo este incluida en las colecciones permitidas
+  const incluida = cPermitidas.includes( c );
+  if (!incluida) {
+    throw new Error(`La coleccion ${c} no esta permitida. Solo se admiten: ${cPermitidas}`)
+  }
+
+  // Si todo sale bien devolver un true
+  return true;
+
+
+}
+
+
+export { esRoleValido, esMailValido, existeUsuarioPorID, existeCategoriaPorId, existeProductoPorId, coleccionesPermitidas };
